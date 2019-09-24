@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -15,11 +16,17 @@ trelloKey = '27138010bc3a442737533781e5029962'
 trelloToken = '0ab806b21beb8db46ff186fb60c364843b541b100249ba7d36cc41f35472ca93'
 
 url = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + appId
-urlLists = 'https://api.trello.com/1/lists/{id}/cards'
-urlBoards = 'https://api.trello.com/1/boards/{id}/lists'
+urlForCard = 'https://api.trello.com/1/cards/{id}'
+urlCards = 'https://api.trello.com/1/lists/{id}/cards'
+urlLists = 'https://api.trello.com/1/boards/{id}/lists'
+urlBoards = 'https://api.trello.com/1/members/me/boards'
+postTrelloUrl = 'https://api.trello.com/1/cards'
+
+#idList = '5d81c5e68f079e461725ca0b'
+#idBoard = '5d81c5e6ecf65d36ef777b70'
 
 trelloQS = {
-	'fields': 'id,name',
+	'fields': 'id,name,desc',
 	'key': trelloKey,
 	'token': trelloToken
 }
@@ -48,7 +55,7 @@ def delete(request):
 	Card.objects.all().delete()
 	return HttpResponseRedirect('/auth/')
 
-'''
+''' serializer method
 class CardView(APIView):
 	def get(self, request):
 		cards = Card.objects.all()
@@ -56,41 +63,121 @@ class CardView(APIView):
 		return Response({"cards": serializer.data})
 '''
 
-''' localhost:1337/auth/cards?type= trello|yandex '''
-
 class CardView(APIView):
 	def get(self, request):
+
 		type = request.GET.get('type')
+
 		if type == 'trello':
-			#id nado kak-to dostavat'
-			idList = '5d81c5e68f079e461725ca0b'
-			response = requests.request("GET", urlLists.format(id=idList), params=trelloQS)
-			return Response({"cards": resp.json()})
+
+			idList = request.GET.get('id')
+
+			response = requests.request("GET", urlCards.format(id=idList), params=trelloQS)
+
+			return Response({"cards": response.json()}, status=status.HTTP_200_OK)
+
+		else:
+
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+
+	def post(self, request):
+
+		type = request.GET.get('type')
+
+		if type == 'trello':
+
+			idList = request.GET.get('id')
+			cardName = request.GET.get('name')
+			cardDesc = request.GET.get('desc')
+
+			postTrelloCardQuery = {
+				'idList': idList,
+				'name': cardName,
+				'desc': cardDesc,
+				'key': trelloKey,
+				'token': trelloToken
+			}
+
+			requests.request("POST", postTrelloUrl, params=postTrelloCardQuery)
+
+			return Response(status=status.HTTP_201_CREATED)
+
+		else:
+
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+
+	def put(self, request):
+
+		type = request.GET.get('type')
+
+		if type == 'trello':
+
+			# при условии, что мы знаем id
+			idCard = request.GET.get('id')
+			newCardName = request.GET.get('name')
+			newCardDesc = request.GET.get('desc')
+
+			putTrelloCardQuery = {
+				'name': newCardName,
+				'desc': newCardDesc,
+				'key': trelloKey,
+				'token': trelloToken
+			}
+
+			requests.request("PUT", urlForCard.format(id=idCard), params=putTrelloCardQuery)
+
+			return Response(status=status.HTTP_202_ACCEPTED)
+
+		else:
+
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+
+	def delete(self, request):
+
+		type = request.GET.get('type')
+
+		if type == 'trello':
+
+			idCard = request.GET.get('id')
+
+			requests.request("DELETE", urlForCard.format(id=idCard), params={'key': trelloKey,'token': trelloToken})
+
+			return Response(status=status.HTTP_204_NO_CONTENT)
+
+		else:
+
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class ListView(APIView):
+
+	def get(self, request):
+
+		type = request.GET.get('type')
+
+		if type == 'trello':
+
+			idBoard = request.GET.get('id')
+
+			response = requests.request("GET", urlLists.format(id=idBoard), params=trelloQS)
+
+			return Response({"lists": response.json()}, status=status.HTTP_200_OK)
+
+		else:
+
+			return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class BoardView(APIView):
+
 	def get(self, request):
+
 		type = request.GET.get('type')
+
 		if type == 'trello':
-			#id nado kak-to dostavat'
-			idBoard = '5d81c5e6ecf65d36ef777b70'
-			response = requests.request("GET", urlBoards.format(id=idBoard), params=trelloQS)
-			return Response({"lists": response.json()})
 
-'''
-class HandleGetRequest(object):
-	def foo(url, id, request):
+			response = requests.request("GET", urlBoards, params=trelloQS)
 
-		type = request.GET.get('type')
+			return Response({"boards": response.json()}, status=status.HTTP_200_OK)
 
-		if request.GET.get('type') == 'trello':
-			trello(url, id, request)
-		elif request.GET.get('type') == 'yandex':
-			return HttpResponseRedirect('/auth/')
 		else:
-			cards = Card.objects.all()
-			return render(request, 'index.html', {'cards': cards})
 
-	def trello(url, id, request):
-		response = requests.request("GET", url.format(id=id), params=trelloQS)
-		return response
-'''
+			return Response(status=status.HTTP_400_BAD_REQUEST)
