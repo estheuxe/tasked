@@ -7,9 +7,6 @@ from rest_framework.response import Response
 import requests
 import json
 
-#idList = '5d81c5e68f079e461725ca0b'
-#idBoard = '5d81c5e6ecf65d36ef777b70'
-
 trelloQS = {
 	'fields': 'id,name,desc',
 	'key': s.TRELLO_KEY,
@@ -17,6 +14,8 @@ trelloQS = {
 }
 
 class CardView(APIView):
+
+	''' Все методы в случае успеха возвращают 200, кроме удаления. В нашем API я обработал доп. 201, 202 коды'''
 
 	def get(self, request):
 
@@ -26,8 +25,12 @@ class CardView(APIView):
 
 		if type == 'trello':
 			idList = request.GET.get('id')
-			response = requests.request("GET", s.URL_CARDS.format(id=idList), params=trelloQS)
-			return Response({"cards": response.json()}, status=status.HTTP_200_OK)
+			response = requests.request('GET', s.URL_CARDS.format(id=idList), params=trelloQS)
+			
+			if response.status_code == 200:
+				return Response({'cards': response.json()}, status=status.HTTP_200_OK)
+			else:
+				return Response(response.status_code)
 		else:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -49,8 +52,12 @@ class CardView(APIView):
 				'token': s.TRELLO_TOKEN
 			}
 
-			requests.request("POST", s.POST_TRELLO_URL, params=postTrelloCardQuery)
-			return Response(status=status.HTTP_201_CREATED)
+			response = requests.request('POST', s.POST_TRELLO_URL, params=postTrelloCardQuery)
+			
+			if response.status_code == 200:
+				return Response(status=status.HTTP_201_CREATED)
+			else:
+				return Response(response.status_code)
 		else:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -72,8 +79,12 @@ class CardView(APIView):
 				'token': s.TRELLO_TOKEN
 			}
 
-			requests.request("PUT", s.URL_FOR_CARD.format(id=idCard), params=putTrelloCardQuery)
-			return Response(status=status.HTTP_202_ACCEPTED)
+			response = requests.request('PUT', s.URL_FOR_CARD.format(id=idCard), params=putTrelloCardQuery)
+			
+			if response.status_code == 200:
+				return Response(status=status.HTTP_202_ACCEPTED)
+			else:
+				return Response(response.status_code)
 		else:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -85,8 +96,12 @@ class CardView(APIView):
 
 		if type == 'trello':
 			idCard = request.GET.get('id')
-			requests.request("DELETE", s.URL_FOR_CARD.format(id=idCard), params={'key': s.TRELLO_KEY,'token': s.TRELLO_TOKEN})
-			return Response(status=status.HTTP_204_NO_CONTENT)
+			response = requests.request('DELETE', s.URL_FOR_CARD.format(id=idCard), params={'key': s.TRELLO_KEY,'token': s.TRELLO_TOKEN})
+			
+			if response.status_code == 204:
+				return Response(status=status.HTTP_204_NO_CONTENT)
+			else:
+				return Response(response.status_code)
 		else:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -104,11 +119,8 @@ class CardView(APIView):
 			}
 			idCard = request.GET.get('id')
 
-			grabResp = requests.request("GET", s.URL_CARDS.format(id=idCard), params=infoTrelloCardQuery)
+			grabResp = requests.request('GET', s.URL_CARDS.format(id=idCard), params=infoTrelloCardQuery)
 
 			''' to DB '''
 			cardName = print(grabResp.json().get('name'))
 			cardDesc = print(grabResp.json().get('desc'))
-			return Response("{0}:{1}".format(cardName,cardDesc), status.HTTP_200_OK)
-		else:
-			return Response(status=status.HTTP_400_BAD_REQUEST)

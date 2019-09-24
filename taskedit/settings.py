@@ -4,10 +4,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'v9t97ttqhcl8a53b-9%)gpyuwcs06rwpv94u$ibsa9m7%kqb3v'
 
+''' tokens & keys & pws '''
+
 APP_ID = '11630581252b45c8b3d7459720ed2af1'
 APP_PW = 'c200a37d97064c03ab55b1a1a5a28402'
 TRELLO_KEY = '27138010bc3a442737533781e5029962'
 TRELLO_TOKEN = '0ab806b21beb8db46ff186fb60c364843b541b100249ba7d36cc41f35472ca93'
+
+''' URLs '''
 
 URL = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + APP_ID
 
@@ -23,9 +27,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    #'taskedit.boards.apps.BoardsConfig',
-    #'taskedit.lists.apps.ListsConfig',
-    #'taskedit.cards.apps.CardsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
