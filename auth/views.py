@@ -9,6 +9,7 @@ from .serializers import CardSerializer
 
 import webbrowser
 import requests
+import json
 
 appId = '11630581252b45c8b3d7459720ed2af1'
 appPw = 'c200a37d97064c03ab55b1a1a5a28402'
@@ -32,13 +33,30 @@ trelloQS = {
 }
 
 def index(request):
-	cards = Card.objects.all()
-	return render(request, 'index.html', {'cards': cards})
+	
+	uriWH = "https://api.trello.com/1/tokens/{APIToken}/webhooks/?key={APIKey}"
+
+	paramsForWH = {
+		#'callbackURL': 'http://127.0.0.1:1337',
+		'callbackURL':  'https://449c6702.ngrok.io/auth/',
+		'idModel': '5d81c5e68f079e461725ca0b',
+		'description': 'First Webhook',
+	}
+
+	answwh = requests.request("POST", uriWH.format(APIToken=trelloToken, APIKey=trelloKey), params=paramsForWH)
+
+	return HttpResponse(answwh.status_code)
+	
+	#cards = Card.objects.all()
+	#return render(request, 'index.html', {'cards': cards})	
+
 	'''
 	Yandex Tracker 
 	webbrowser.open(url)
 	return HttpResponse("auth page")
 	'''
+
+''' 
 def gettoken(request):
 	currUrl = request.get_full_path()
 	return HttpResponse(currUrl)
@@ -54,6 +72,7 @@ def create(request):
 def delete(request):
 	Card.objects.all().delete()
 	return HttpResponseRedirect('/auth/')
+'''
 
 ''' serializer method
 class CardView(APIView):
@@ -64,6 +83,7 @@ class CardView(APIView):
 '''
 
 class CardView(APIView):
+
 	def get(self, request):
 
 		type = request.GET.get('type')
@@ -143,6 +163,32 @@ class CardView(APIView):
 			requests.request("DELETE", urlForCard.format(id=idCard), params={'key': trelloKey,'token': trelloToken})
 
 			return Response(status=status.HTTP_204_NO_CONTENT)
+
+		else:
+
+			return Response(status=status.HTTP_400_BAD_REQUEST)
+
+	def grab(self, request):
+		
+		type = request.GET.get('type')
+
+		if type == 'trello':
+
+			infoTrelloCardQuery = {
+				'fields': 'name,desc',
+				'key': trelloKey,
+				'token': trelloToken
+			}
+
+			idCard = request.GET.get('id')
+
+			grabResp = requests.request("GET", urlCards.format(id=idCard), params=infoTrelloCardQuery)
+
+			''' to DB '''
+			cardName = print(grabResp.json().get('name'))
+			cardDesc = print(grabResp.json().get('desc'))
+
+			return Response("{0}:{1}".format(cardName,cardDesc), status.HTTP_200_OK)
 
 		else:
 
