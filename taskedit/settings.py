@@ -21,6 +21,9 @@ URL_LISTS = 'https://api.trello.com/1/boards/{id}/lists'
 URL_BOARDS = 'https://api.trello.com/1/members/me/boards'
 POST_TRELLO_URL = 'https://api.trello.com/1/cards'
 
+YT_URL_CARDS = 'https://estheuxework.myjetbrains.com/youtrack/api/issues'
+YT_URL_CARD_EDIT = 'https://estheuxework.myjetbrains.com/youtrack/api/issues/{id}'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
