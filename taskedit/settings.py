@@ -23,6 +23,7 @@ POST_TRELLO_URL = 'https://api.trello.com/1/cards'
 
 YT_URL_CARDS = 'https://estheuxework.myjetbrains.com/youtrack/api/issues'
 YT_URL_CARD_EDIT = 'https://estheuxework.myjetbrains.com/youtrack/api/issues/{id}'
+YT_URL_BOARDS = 'https://estheuxework.myjetbrains.com/youtrack/api/admin/projects'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
