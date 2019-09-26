@@ -7,12 +7,6 @@ from rest_framework.response import Response
 import requests
 import json
 
-trelloQS = {
-	'fields': 'id,name,desc',
-	'key': s.TRELLO_KEY,
-	'token': s.TRELLO_TOKEN
-}
-
 class ListView(APIView):
 
 	def get(self, request):
@@ -22,7 +16,14 @@ class ListView(APIView):
 		type = request.GET.get('type')
 
 		if type == 'trello':
+			trelloQS = {
+				'fields': 'id,name,desc',
+				'key': s.TRELLO_KEY,
+				'token': s.TRELLO_TOKEN
+			}
+
 			idBoard = request.GET.get('id')
+			
 			response = requests.request('GET', s.URL_LISTS.format(id=idBoard), params=trelloQS)
 
 			if response.status_code == 200:

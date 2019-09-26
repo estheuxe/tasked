@@ -7,12 +7,6 @@ from rest_framework.response import Response
 import requests
 import json
 
-trelloQS = {
-	'fields': 'id,name,desc',
-	'key': s.TRELLO_KEY,
-	'token': s.TRELLO_TOKEN
-}
-
 ytHeaders = {
 	'Authorization': 'Bearer perm:cm9vdA==.NDYtMQ==.UQ5xwQt0IXO6fZUB5hGtRS1DulxQSN',
 	'Accept': 'application/json',
@@ -31,6 +25,12 @@ class CardView(APIView):
 		type = request.GET.get('type')
 
 		if type == 'trello':
+			trelloQS = {
+				'fields': 'id,name,desc',
+				'key': s.TRELLO_KEY,
+				'token': s.TRELLO_TOKEN
+			}
+			
 			idList = request.GET.get('id')
 
 			response = requests.request('GET', s.URL_CARDS.format(id=idList), params=trelloQS)
@@ -39,7 +39,6 @@ class CardView(APIView):
 				return Response({'cards': response.json()}, status=status.HTTP_200_OK)
 			else:
 				return Response(response.status_code)
-
 		elif type == 'yt':
 			ytCardFields = {
 				'fields': 'id,summary,name,description,reporter(login)'
@@ -172,23 +171,3 @@ class CardView(APIView):
 				return Response(response.status_code)
 		else:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
-
-	def grab(self, request):
-		
-		''' Эта функция уйдет когда появятся вебхуки '''
-
-		type = request.GET.get('type')
-
-		if type == 'trello':
-			infoTrelloCardQuery = {
-				'fields': 'name,desc',
-				'key': s.TRELLO_KEY,
-				'token': s.TRELLO_TOKEN
-			}
-			idCard = request.GET.get('id')
-
-			grabResp = requests.request('GET', s.URL_CARDS.format(id=idCard), params=infoTrelloCardQuery)
-
-			''' to DB '''
-			cardName = print(grabResp.json().get('name'))
-			cardDesc = print(grabResp.json().get('desc'))
