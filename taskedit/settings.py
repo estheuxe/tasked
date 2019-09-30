@@ -4,6 +4,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'v9t97ttqhcl8a53b-9%)gpyuwcs06rwpv94u$ibsa9m7%kqb3v'
 
+''' settings of services '''
+
+YT_HOST = 'estheuxework'
+
 ''' tokens & keys & pws '''
 
 YAN_APP_ID = '11630581252b45c8b3d7459720ed2af1'
@@ -19,17 +23,18 @@ YT_HEADERS = {
 
 ''' URLs '''
 
-URL = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + YAN_APP_ID
+YAN_URL = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=' + YAN_APP_ID
 
-URL_FOR_CARD = 'https://api.trello.com/1/cards/{id}'
-URL_CARDS = 'https://api.trello.com/1/lists/{id}/cards'
-URL_LISTS = 'https://api.trello.com/1/boards/{id}/lists'
-URL_BOARDS = 'https://api.trello.com/1/members/me/boards'
-POST_TRELLO_URL = 'https://api.trello.com/1/cards'
+TRELLO_URL_FOR_CARD = 'https://api.trello.com/1/cards/{id}'
+TRELLO_URL_CARDS = 'https://api.trello.com/1/lists/{id}/cards'
+TRELLO_URL_LISTS = 'https://api.trello.com/1/boards/{id}/lists'
+TRELLO_URL_BOARDS = 'https://api.trello.com/1/members/me/boards'
+TRELLO_URL_POST_CARD = 'https://api.trello.com/1/cards'
 
-YT_URL_CARDS = 'https://estheuxework.myjetbrains.com/youtrack/api/issues'
-YT_URL_CARD_EDIT = 'https://estheuxework.myjetbrains.com/youtrack/api/issues/{id}'
-YT_URL_BOARDS = 'https://estheuxework.myjetbrains.com/youtrack/api/admin/projects'
+YT_URL_CARDS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/issues'
+YT_URL_CARD_EDIT = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/issues/{id}'
+YT_URL_LISTS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/agiles'
+YT_URL_BOARDS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/admin/projects'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
