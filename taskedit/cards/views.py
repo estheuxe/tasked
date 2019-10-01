@@ -21,7 +21,7 @@ class CardView(APIView):
 		service = core.service(type)
 		idList = request.GET.get('id')
 		response = service.watchCards(idList)
-		return Response(response.json())
+		return Response(response)
 
 	def post(self, request):
 

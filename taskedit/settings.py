@@ -31,11 +31,12 @@ TRELLO_URL_LISTS = 'https://api.trello.com/1/boards/{id}/lists'
 TRELLO_URL_BOARDS = 'https://api.trello.com/1/members/me/boards'
 TRELLO_URL_POST_CARD = 'https://api.trello.com/1/cards'
 
+YT_URL_GLOBAL = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/admin/customFieldSettings/bundles/state'
 YT_URL_CARDS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/issues'
 YT_URL_CARD_EDIT = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/issues/{id}'
-YT_URL_LISTS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/agiles'
-YT_URL_BOARDS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/admin/projects'
-
+YT_URL_LISTS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/admin/customFieldSettings/bundles/state/{id}'
+YT_URL_PROJECTS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/admin/projects'
+YT_URL_BOARDS = 'https://' + YT_HOST + '.myjetbrains.com/youtrack/api/agiles'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

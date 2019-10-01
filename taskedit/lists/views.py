@@ -19,7 +19,6 @@ class ListView(APIView):
 
 		type = request.GET.get('type')
 		service = core.service(type)
-		#idBoard = request.GET.get('id')
-		#response = service.watchLists(idBoard)
-		response = service.watchLists()
-		return Response(response.json())
+		idBoard = request.GET.get('id')
+		response = service.watchLists(idBoard)
+		return Response(response)
