@@ -32,7 +32,11 @@ class CardView(APIView):
 		idList = request.GET.get('id')
 		cardName = request.GET.get('name')
 		cardDesc = request.GET.get('desc')
-		response = service.createCard(idList,cardName,cardDesc)
+		project = requests.GET.get('project')
+		if project != None:
+			response = service.createCard(idList,cardName,cardDesc,project)
+		else:
+			response = service.createCard(idList,cardName,cardDesc)
 		return Response(response.json())
 
 	def put(self, request):

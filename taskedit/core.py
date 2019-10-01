@@ -26,7 +26,7 @@ class Taskedit(ABC):
 	def watchCards(self, idList):
 		pass
 
-	def createCard(self, idList, cardName, cardDesc):
+	def createCard(self, idList, cardName, cardDesc, *idProj):
 		pass
 
 	def updateCard(self, idCard, newCardName, newCardDesc):
@@ -72,7 +72,7 @@ class Trello(Taskedit):
 
 		return {'Cards': orderedList}
 
-	def createCard(self, idList, cardName, cardDesc):
+	def createCard(self, idList, cardName, cardDesc, *idProj):
 		self.idList = idList
 		self.cardName = cardName
 		self.cardDesc = cardDesc
@@ -157,19 +157,20 @@ class Yt(Taskedit):
 
 		return {'Cards': dt}
 
-	def createCard(self, idList, cardName, cardDesc):
+	def createCard(self, idList, cardName, cardDesc, *idProj):
 		self.idList = idList
 		self.cardName = cardName
 		self.cardDesc = cardDesc
 		ytCreateCardFields = {
 			'fields': 'idReadable'
 		}
+		self.project = idProj[0]
 
 		ytCr = {
 			'summary': self.cardName,
 			'description': self.cardDesc,
 			'project': {
-				'id': '0-3'
+				'id': self.project
 			},
 			'customFields': [
 				{
