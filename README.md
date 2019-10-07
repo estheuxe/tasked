@@ -57,4 +57,4 @@ DELETE(Cards only):
 
 Superuser:
 	name: estheuxe
-	pw: asdf5
+	pw: pieliedie
