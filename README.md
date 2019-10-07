@@ -54,3 +54,7 @@ DELETE(Cards only):
 	}
 
 	requests.request('DELETE', uriCards, params=qs)
+
+Superuser:
+	name: estheuxe
+	pw: asdf5
