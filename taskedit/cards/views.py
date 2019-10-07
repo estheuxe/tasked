@@ -7,9 +7,8 @@ from rest_framework.response import Response
 import requests
 import json
 
-import sys,os
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import core
+from taskedit import core
+from taskedit.cards.models import Card
 
 class CardView(APIView):
 
@@ -32,11 +31,16 @@ class CardView(APIView):
 		idList = request.GET.get('id')
 		cardName = request.GET.get('name')
 		cardDesc = request.GET.get('desc')
-		project = requests.GET.get('project')
+		project = request.GET.get('project')
 		if project != None:
 			response = service.createCard(idList,cardName,cardDesc,project)
 		else:
 			response = service.createCard(idList,cardName,cardDesc)
+		idCard = response.json().get('id')
+		Card.objects.create(card_id_in_service=idCard,\
+							card_name=cardName,\
+							card_description=cardDesc,\
+							card_type=type)
 		return Response(response.json())
 
 	def put(self, request):
@@ -49,6 +53,9 @@ class CardView(APIView):
 		newCardName = request.GET.get('name')
 		newCardDesc = request.GET.get('desc')
 		response = service.updateCard(idCard,newCardName,newCardDesc)
+		Card.objects.filter(card_id_in_service=idCard)\
+					.update(card_name=newCardName,\
+							card_description=newCardDesc)
 		return Response(response.json())
 
 	def delete(self, request):

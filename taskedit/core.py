@@ -162,7 +162,7 @@ class Yt(Taskedit):
 		self.cardName = cardName
 		self.cardDesc = cardDesc
 		ytCreateCardFields = {
-			'fields': 'idReadable'
+			'fields': 'idReadable,id'
 		}
 		self.project = idProj[0]
 

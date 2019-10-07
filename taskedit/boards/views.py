@@ -7,9 +7,7 @@ from rest_framework.response import Response
 import requests
 import json
 
-import sys,os
-sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import core
+from taskedit import core
 
 class BoardView(APIView):
 	
